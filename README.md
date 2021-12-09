@@ -22,9 +22,9 @@ J Neurosci Methods, 162(1-2):8-13
 Peirce JW (2009) Generating stimuli for neuroscience using PsychoPy.
 Front. Neuroinform. 2:10. doi:10.3389/neuro.11.010.2008
 
-- Zaber Motion Library for Python https://www.zaber.com/software/docs/motion-library/binary/
+- [Zaber Motion Library for Python](https://www.zaber.com/software/docs/motion-library/binary/)
 The Python implementation of the binary protocol for Zaber devices.
 
-- ScannerTrigger module https://github.com/GIfMI/ScannerTrigger/
+- [ScannerTrigger module](https://github.com/GIfMI/ScannerTrigger/)
 This module is a wrapper class for all devices which can import a trigger from
 eg the MR scanner to PsychoPy.

@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""Script to run an fMRI paradigm.
+The paradigm is hard-coded but some code is available to support reading from
+as CSV file. Just (un)comment the appropriate code.
+"""
+# Part of the URO library
+# Copyright (C) 2021 Pieter Vandemaele
+# Distributed under the terms of the GNU General Public License (GPL).
+
 from psychopy import core, clock, visual, event, gui, logging
 import time
 from datetime import datetime
@@ -23,6 +34,31 @@ def print_log(txt):
     print('> {} {}'.format(dt_string, txt))
 
 print_log('Started experiment')
+
+# ######################################################################
+# EXPERIMENT INFO
+# ######################################################################
+expName = "URO"
+expInfo = {
+            'subject ID': 1,
+            'session ID': [1, 2],
+            'triggering': ['keyboard',
+                           'serial',
+                           'parallel',
+                           'cedrus',
+                           'launchscan',
+                           'dummy'],
+            'skip scans': 0,
+            'COM Port (MRI)': "COM1",
+            'COM Port (Zaber)': "COM9",
+            'Zaber': ['off', 'on']
+            # 'Paradigm from file': ['yes', 'no'],
+           }
+
+dlg = gui.DlgFromDict(dictionary=expInfo, title=expName, order=list(expInfo.keys()), sortKeys=False)
+
+if dlg.OK is False:
+    core.quit()
 
 # ######################################################################
 # DEFINE THE PARADIGM
@@ -95,45 +131,16 @@ col_command = {
 #     paradigmreader = csv.reader(csvfile, delimiter=',')
 #     paradigm = []
 #     for row in paradigmreader:
-#         print(row)
 #         row = [x.strip(' ') for x in row]
-#         print(row)
 #         row = [x.replace('\\n', '\n') for x in row]
-#         print(row)
 #         row[2] = int(row[2])
-#         print(row)
 #         if len(row)>4:
 #             row[4] = int(row[4])
-#         print(row)
-#         print('---------------------')
 #         paradigm.append(row)
 #
 # print(paradigm)
 
-# ######################################################################
-# EXPERIMENT INFO
-# ######################################################################
-expName = "URO"
-expInfo = {
-            'subject ID': 1,
-            'session ID': [1, 2],
-            'triggering': ['keyboard',
-                           'serial',
-                           'parallel',
-                           'cedrus',
-                           'launchscan',
-                           'dummy'],
-            'skip scans': 0,
-            'COM Port (MRI)': "COM1",
-            'COM Port (Zaber)': "COM9",
-            'Zaber': ['off', 'on']
-            # 'Paradigm from file': ['yes', 'no'],
-           }
 
-dlg = gui.DlgFromDict(dictionary=expInfo, title=expName, order=list(expInfo.keys()), sortKeys=False)
-
-if dlg.OK is False:
-    core.quit()
 
 # ######################################################################
 # PREPARE PSYCHOPY
@@ -186,7 +193,6 @@ print_log('Logging to file {}'.format(pl.Path(logdir, logfname).absolute()))
 # Window
 win = visual.Window([1280, 1024], monitor="testMonitor", units="norm")
 win.update()
-event.waitKeys()
 
 # ######################################################################
 # DASHBOARD
@@ -537,7 +543,7 @@ def present_condition(win, start_time, entry, countdown):
         rate = 0
 
     logging.flush()
-    txt_flowBox.text = 'Volume: {:.1f} ml\n\nRate: {} ml/s'.format(distance_mm, rate)
+    txt_flowBox.text = 'Volume: {:.1f} ml\nRate: {} ml/s'.format(distance_mm, rate)
     print_log('---> Presenting event: {} | command: {} | volume: {} ml | velocity {} ml/s'.format(name, command, distance_mm, rate))
 
     go = True
@@ -545,9 +551,6 @@ def present_condition(win, start_time, entry, countdown):
         while global_clock.getTime() < end_time and go:
             txt_cntrBox.text = str(ceil(end_time - global_clock.getTime()))
 
-#            if (command == 'infuse' or command == 'withdraw'):
-#                txt_flowBox.text = 'Volume: {}\n\nRate: {}'.format(distance_mm, rate)
-#                txt_flowBox.draw()
             draw_dashboard()
             win.update()
 
